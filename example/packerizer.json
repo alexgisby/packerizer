@@ -1,3 +1,11 @@
 {
-	"base_version": "1.5"
+	"base_version": "1.5",
+	"basedir_css": "./example/css",
+	"basedir_js": "./example/js",
+	"packages": {
+		"homepage": {
+			"css": ["homepage.css", "homepage_extra.css"],
+			"js": ["homepage.js", "carousel.js"]
+		}
+	}
 }

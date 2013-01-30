@@ -11,4 +11,8 @@ compressors and serve them up in a versioned way.
 
 ## How to use
 
-Not sure yet!
+Not sure yet! Under construction at the moment.
+
+## Name
+
+Definitely going to change the name of this thing. Packerizer sucks.
