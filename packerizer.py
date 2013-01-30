@@ -10,6 +10,12 @@ class PackerException(Exception):
     pass
 
 class Packer(object):
+
+    ENGINES = {
+        'yui': 'vendor/yui/build/yuicompressor-2.4.7.jar',
+        'google_closure': 'vendor/google_closure/compiler.jar'
+    }
+
     def __init__(self, basedir=None):
         """Loads up an instance of the Packer, with an optional basedir to look for the config in"""
         self.base_dir = basedir if basedir != None else "./"
@@ -98,12 +104,19 @@ class Packer(object):
             package_items = self.config['packages'][package]
 
             # Loop through the CSS and JS files, concating them into a single 
-            # glorious whole.
+            # glorious whole and then running them through the optimisers!
             if 'css' in package_items:
                 css_output_file = os.path.join(workspace_dir, package + ".css")
                 self._concat_files(package_items['css'], css_output_file, css_basedir)
 
+                # Now work out the optimiser to use!
+                css_optimiser = 'yui' if 'css_engine' not in package_items else package_items['css_engine']
+                css_params.append(self.ENGINES[css_optimiser])
+                css_params.extend(['--type', 'css', ])
+                
+
             if 'js' in package_items:
                 js_output_file = os.path.join(workspace_dir, package + ".js")
                 self._concat_files(package_items['js'], js_output_file, js_basedir)
+
 
