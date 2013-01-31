@@ -1,5 +1,5 @@
 #
-# Main Packerizer Class
+# Main Crushr Class
 #
 
 import sys
@@ -19,8 +19,8 @@ class Packer(object):
     def __init__(self, basedir=None):
         """Loads up an instance of the Packer, with an optional basedir to look for the config in"""
         self.base_dir = basedir if basedir != None else "./"
-        self.config_location = os.path.join(self.base_dir, "packerizer.json")
-        self.buildfile_location = os.path.join(self.base_dir, "packerizer.buildfile.json")
+        self.config_location = os.path.join(self.base_dir, "crushr.json")
+        self.buildfile_location = os.path.join(self.base_dir, "crushr.buildfile.json")
 
         # Read in the config:
         if not os.path.exists(self.config_location):
@@ -47,12 +47,6 @@ class Packer(object):
                 self.buildfile = json.load(build_file)
         else:
             self.buildfile = dict()
-
-
-    def build_info(self):
-        """Returns some information about the build we're about to make. TBD."""
-        pass
-
     
     def _concat_files(self, file_list, output_filepath, input_basedir = None):
         """
@@ -111,8 +105,6 @@ class Packer(object):
 
                 # Now work out the optimiser to use!
                 css_optimiser = 'yui' if 'css_engine' not in package_items else package_items['css_engine']
-                css_params.append(self.ENGINES[css_optimiser])
-                css_params.extend(['--type', 'css', ])
                 
 
             if 'js' in package_items:
