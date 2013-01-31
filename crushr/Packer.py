@@ -1,7 +1,3 @@
-#
-# Main Crushr Class
-#
-
 import sys
 import os
 import json

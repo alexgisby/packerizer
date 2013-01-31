@@ -10,7 +10,7 @@ Copyright Alex Gisby <alex@solution10.com>
 """
 
 import argparse
-import crushr
+from crushr.Packer import Packer
 
 help_message = '''
 Simple Asset versioning and compression.
@@ -28,7 +28,7 @@ if __name__ == '__main__':
         )
 
     args = parser.parse_args()
-    packer = crushr.Packer(args.basedir)
+    packer = Packer(args.basedir)
 
     if not args.quiet:
         print "Packer loaded, reading config from %s" % packer.config_location
