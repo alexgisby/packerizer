@@ -11,6 +11,7 @@ Copyright Alex Gisby <alex@solution10.com>
 
 import argparse
 from crushr.Packer import Packer
+import os
 
 help_message = '''
 Simple Asset versioning and compression.
@@ -35,11 +36,36 @@ if __name__ == '__main__':
     args = parser.parse_args()
     packer = Packer(args.basedir)
 
+    print ""
+
     if not args.quiet:
         print "Packer loaded, reading config from %s" % packer.config_location
         print "Starting compression run..."
 
-    packer.compress(args.force_version)
+    buildinfo = packer.compress(args.force_version)
 
-    print "Done"
+    # Output some information about that build:
+    if not args.quiet:
+        print "Build Complete! Here come the stats:"
+        print ""
+
+        print "Version: %s" % buildinfo['full_version']
+        print "Packages Built:"
+        for package in buildinfo['packages_built']:
+            package_items = buildinfo['packages_built'][package]
+
+            css_reduction = 100 - ((package_items['css_output_size'] / float(package_items['css_input_size'])) * 100)
+            js_reduction = 100 - ((package_items['js_output_size'] / float(package_items['js_input_size'])) * 100)
+
+            print "  %s:" % package
+            print "    CSS: %d files, %d" % (len(package_items['css']), css_reduction) + "% size reduction"
+            print "    JS: %d files, %d" % (len(package_items['js']), js_reduction) + "% size reduction"
+            print ""
+
+
+        print ""
+        print "Build Complete! Have a terrific day"
+        print ""
+
+
     

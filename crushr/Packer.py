@@ -42,7 +42,6 @@ class Packer(object):
         else:
             self.buildfile = dict()
 
-        print self.buildfile
     
     def _concat_files(self, file_list, output_filepath, input_basedir = None):
         """
@@ -86,8 +85,20 @@ class Packer(object):
         eng.set_type(language)
         return eng
 
+    def _calc_filesize(self, files):
+        """
+        Runs off and adds up the total filesize of the given files
+        """
+        fsize = 0
+        for f in files:
+            fsize = fsize + os.path.getsize(f)
+
+        return fsize
+
     def compress(self, force_version=None):
-        """Does the actual file sticking together and compression"""
+        """
+        Does the actual file sticking together and compression
+        """
         
         # Calculate the minor and full version filenames if not forcing
         # a version. If you do force it, you're pretty much on your own
@@ -140,6 +151,7 @@ class Packer(object):
 
                 # Add the files built into the buildinfo:
                 version_buildinfo['packages_built'][package]['css'] = files_built
+                version_buildinfo['packages_built'][package]['css_input_size'] = self._calc_filesize(files_built)
 
                 # Now work out the optimiser to use! Default to YUI (as we only support YUI...)
                 css_optimiser_name = 'yui' if 'css_engine' not in package_items else package_items['css_engine']
@@ -153,6 +165,8 @@ class Packer(object):
                 css_output_file = os.path.join(full_output_dir, package + ".min.css")
                 css_engine.compress(css_concat_file, css_output_file)
 
+                version_buildinfo['packages_built'][package]['css_output_size'] = os.path.getsize(css_output_file)
+
 
             if 'js' in package_items:
                 js_concat_file = os.path.join(workspace_dir, package + ".js")
@@ -160,6 +174,7 @@ class Packer(object):
 
                 # Add the files built into the buildinfo:
                 version_buildinfo['packages_built'][package]['js'] = files_built
+                version_buildinfo['packages_built'][package]['js_input_size'] = self._calc_filesize(files_built)
 
                 # Now work out the optimiser to use! Default to Closure
                 js_optimiser_name = 'google_closure' if 'js_engine' not in package_items else package_items['js_engine']
@@ -172,6 +187,8 @@ class Packer(object):
                 # And now run the compression via the engine!
                 js_output_file = os.path.join(full_output_dir, package + ".min.js")
                 js_engine.compress(js_concat_file, js_output_file)
+
+                version_buildinfo['packages_built'][package]['js_output_size'] = os.path.getsize(js_output_file)
 
 
         # All done compressing, remove the workspace and write the .buildinfo files
@@ -198,4 +215,4 @@ class Packer(object):
         with open(self.buildfile_location, 'w') as buildfile_file:
             json.dump(buildinfo, buildfile_file, indent=4)
 
-
+        return version_buildinfo

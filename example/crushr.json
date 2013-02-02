@@ -5,7 +5,10 @@
 	"packages": {
 		"homepage": {
 			"css": ["homepage.css", "homepage_extra.css"],
-			"js": ["homepage.js", "carousel.js"]
+			"js": ["homepage.js", "carousel.js"],
+			"js_options": {
+				"--compilation_level": "ADVANCED_OPTIMIZATIONS"
+			}
 		}
 	}
 }
