@@ -86,12 +86,18 @@ class Packer(object):
         eng.set_type(language)
         return eng
 
-    def compress(self):
+    def compress(self, force_version=None):
         """Does the actual file sticking together and compression"""
         
-        # Calculate the minor and full version filenames:
-        minor_version = 0 if 'minor_version' not in self.buildfile else int(self.buildfile['minor_version']) + 1
-        full_version = self.config['base_version'] + '.' + str(minor_version)
+        # Calculate the minor and full version filenames if not forcing
+        # a version. If you do force it, you're pretty much on your own
+        # when it comes to auto-calculating the next version.
+        if force_version == None:
+            minor_version = 0 if 'minor_version' not in self.buildfile else int(self.buildfile['minor_version']) + 1
+            full_version = self.config['base_version'] + '.' + str(minor_version)
+        else:
+            full_version = force_version
+            minor_version = 0 if 'minor_version' not in self.buildfile else int(self.buildfile['minor_version'])
 
         # Make the output directory
         full_output_dir = os.path.join(self.config['output_dir'], full_version)
@@ -179,13 +185,14 @@ class Packer(object):
         # And now write the main buildinfo file. This is very small
         # as it just stores the highest minor version.
         buildinfo_minor_version = minor_version
-        if 'minor_version' in self.buildfile:
+        if force_version == None and 'minor_version' in self.buildfile:
             if int(self.buildfile['minor_version']) > minor_version:
                 buildinfo_minor_version = self.buildfile['minor_version']
 
         buildinfo = {
-            "minor_version": int(buildinfo_minor_version),
-            "last_build": str(datetime.now())
+            "last_build": str(datetime.now()),
+            "full_version": full_version,
+            "minor_version": buildinfo_minor_version
         }
 
         with open(self.buildfile_location, 'w') as buildfile_file:

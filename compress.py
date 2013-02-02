@@ -27,6 +27,11 @@ if __name__ == '__main__':
             default=False
         )
 
+    parser.add_argument('--force_version', '-fv',
+            help="Force crushr to build to a certain version number",
+            default=None
+        )
+
     args = parser.parse_args()
     packer = Packer(args.basedir)
 
@@ -34,7 +39,7 @@ if __name__ == '__main__':
         print "Packer loaded, reading config from %s" % packer.config_location
         print "Starting compression run..."
 
-    packer.compress()
+    packer.compress(args.force_version)
 
     print "Done"
     
