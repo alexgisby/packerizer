@@ -4,6 +4,7 @@
 
 import os
 import subprocess
+import pipes
 
 class Engine(object):
     """
@@ -68,7 +69,11 @@ class YUI(Engine):
     Options:
         type: css or js
     """
-    ENGINE_PATH = 'java -jar vendor/yui/build/yuicompressor-2.4.7.jar'
+
+    def __init__(self):
+        jarpath = os.path.dirname(os.path.realpath(__file__)) + '/../'
+        self.ENGINE_PATH = 'java -jar ' + pipes.quote(jarpath) + 'vendor/yui/build/yuicompressor-2.4.7.jar'
+        Engine.__init__(self);
 
     def compress(self, input_file, output_file):
         self.options({
@@ -90,7 +95,11 @@ class YUI(Engine):
 # Google Closure
 #
 class Closure(Engine):
-    ENGINE_PATH = 'java -jar vendor/google_closure/compiler.jar'
+
+    def __init__(self):
+        jarpath = os.path.dirname(os.path.realpath(__file__)) + '/../'
+        self.ENGINE_PATH = 'java -jar ' + pipes.quote(jarpath) + 'vendor/google_closure/compiler.jar'
+        Engine.__init__(self);
 
     def _set_base_options(self):
         """

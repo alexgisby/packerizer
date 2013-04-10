@@ -1,5 +1,6 @@
 import sys
 import os
+import io
 import json
 import engines
 import shutil
@@ -56,12 +57,15 @@ class Packer(object):
                 file_fullpath = filename
             
             if os.path.exists(file_fullpath):
-                with open(file_fullpath) as file_contents:
+                print "Reading: %s" % file_fullpath
+                with io.open(file_fullpath, 'rt', encoding='UTF-8') as file_contents:
                     concat_contents += "/* File: " + file_fullpath + " */\n"
                     concat_contents += file_contents.read()
                     concat_contents += "\n\n"
 
                     concatted_files.append(file_fullpath)
+            else:
+                print "ERROR: File not found: %s" % file_fullpath
 
         with open(output_filepath, 'w') as output_file:
             output_file.write(concat_contents)
@@ -192,7 +196,7 @@ class Packer(object):
 
 
         # All done compressing, remove the workspace and write the .buildinfo files
-        shutil.rmtree(workspace_dir)
+        # shutil.rmtree(workspace_dir)
 
         # Write the version buildinfo into the output directory:
         version_buildinfo['last_built'] = str(datetime.now())

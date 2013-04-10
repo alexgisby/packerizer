@@ -54,12 +54,16 @@ if __name__ == '__main__':
         for package in buildinfo['packages_built']:
             package_items = buildinfo['packages_built'][package]
 
-            css_reduction = 100 - ((package_items['css_output_size'] / float(package_items['css_input_size'])) * 100)
-            js_reduction = 100 - ((package_items['js_output_size'] / float(package_items['js_input_size'])) * 100)
-
             print "  %s:" % package
-            print "    CSS: %d files, %d" % (len(package_items['css']), css_reduction) + "% size reduction"
-            print "    JS: %d files, %d" % (len(package_items['js']), js_reduction) + "% size reduction"
+
+            if len(package_items['css']) > 0:
+                css_reduction = 100 - ((package_items['css_output_size'] / float(package_items['css_input_size'])) * 100)
+                print "    CSS: %d files, %d" % (len(package_items['css']), css_reduction) + "% size reduction"
+
+            if len(package_items['js']) > 0:
+                js_reduction = 100 - ((package_items['js_output_size'] / float(package_items['js_input_size'])) * 100)
+                print "    JS: %d files, %d" % (len(package_items['js']), js_reduction) + "% size reduction"
+
             print ""
 
 

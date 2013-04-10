@@ -1,13 +1,26 @@
 {
 	"base_version": "1.5",
+	
 	"basedir_css": "./example/css",
 	"basedir_js": "./example/js",
+
+	"output_dir": "",
+
+	"webroot": "/assets/",
+	"webroot_uncompressed": "/",
+
 	"packages": {
 		"homepage": {
 			"css": ["homepage.css", "homepage_extra.css"],
+			"css_options" : {
+
+			},
+			"css_engine": "yui",
+
 			"js": ["homepage.js", "carousel.js"],
+			"js_engine": "yui",
 			"js_options": {
-				"--compilation_level": "ADVANCED_OPTIMIZATIONS"
+
 			}
 		}
 	}
